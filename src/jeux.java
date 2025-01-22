@@ -9,7 +9,7 @@ public class jeux {
         win = false;
     }
 
-    public static void demarelejeux() {
+    public void demarelejeux() {
         // Crée un cadrillage avec 10 lignes et 11 colonnes
         Cadrillage cadrillage = new Cadrillage(10, 11);
         cadrillage.afficher();
@@ -50,5 +50,45 @@ public class jeux {
         cadrillage.deplacerPersonnage((byte)2,(byte)2,joueurs.get(0));
         cadrillage.deplacerPersonnage((byte)2,(byte)4,joueurs.get(0));
         cadrillage.afficher();
+
+        this.partie(cadrillage, joueurs, nombreDeJoueurs);
+    }
+
+    public void partie(Cadrillage cadrillage, ArrayList<Personage> joueurs, int nombreDeJoueurs) {
+        while(true){
+
+            for(int i = 0; i < nombreDeJoueurs; i++){
+                Personage joueur = joueurs.get(i);
+                cadrillage.deplacerPersonnage(joueur);
+                if(joueur.recupEnvie()) {
+                    cadrillage.detruireterin();
+                    cadrillage.afficher();
+                }
+            }
+            byte jenvie=0;
+            for(int i = 0; i < nombreDeJoueurs; i++){
+                Personage joueur = joueurs.get(i);
+                if(joueur.recupEnvie()){
+                    jenvie++;
+                }
+                if(jenvie==2){
+                    break;
+                }
+            }
+            if(jenvie==1){
+                this.win = true;
+            }
+
+            if(this.win){
+                break;//partie ganier
+            }
+        }
+        for(int i = 0; i < nombreDeJoueurs; i++){
+            Personage joueur = joueurs.get(i);
+            if(joueur.recupEnvie()){
+                System.out.println(joueur.recupPseudo()+" a ganier la partie");
+                break;
+            }
+        }
     }
 }
