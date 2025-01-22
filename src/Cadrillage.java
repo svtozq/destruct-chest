@@ -47,7 +47,18 @@ public class Cadrillage {
     }
 
     // Méthode pour placer un personnage dans le tableau
-    public void placerPersonnage(int ligne, int colonne, String personnage) {
-        this.tableau[ligne][colonne] = "\033[47m" + personnage + "\033[0m";
+    public void placerPersonnage(int ligne, int colonne, Personage joueur) {
+        this.tableau[ligne][colonne] = "\033[47m" + joueur.recupPersonnage() + "\033[0m";
+        joueur.defLigne((byte)ligne);
+        joueur.defColonne((byte)colonne);
+    }
+
+    public void deplacerPersonnage(byte ligne, byte colonne, Personage joueur) {
+        byte lignedepar = joueur.recupLigne();
+        byte colonnedepar = joueur.recupColonne();
+        this.tableau[lignedepar][colonnedepar] = "\033[47m  \033[0m";
+        this.tableau[ligne][colonne] = "\033[47m" + joueur.recupPersonnage() + "\033[0m";
+        joueur.defLigne((byte) ligne);
+        joueur.defColonne((byte) colonne);
     }
 }
