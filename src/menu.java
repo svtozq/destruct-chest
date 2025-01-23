@@ -31,15 +31,18 @@ public class menu {
                     System.out.println(" ");
                     Scores.afficherScores("scores.txt");
                     System.out.println(" ");
+                    Scores.afficherScoresTrie("scores.txt", false);
+                    System.out.println(" ");
+                    Scores.afficherTop10Scores("scores.txt");
+                    System.out.println(" ");
+                    Scores.afficherScoresTrie("scores.txt", true);
+
                     break;
                 case 3:
                     System.out.println("Vous avez choisi l'option 3.");
                     break;
                 case 4:
-                    System.out.println("regle du jeu.");
-                    System.out.println(".");
-                    System.out.println("0. quiTter.");
-                    scanner.next();
+                    regle_du_jeu.showGameRules();
                     break;
                 case 0:
                     System.out.println("Au revoir !");
