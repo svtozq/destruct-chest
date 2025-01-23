@@ -1,3 +1,5 @@
+import java.util.Scanner;
+import java.util.InputMismatchException;
 public class Cadrillage {
 
     private int lignes;    // Nombre de lignes
@@ -47,7 +49,138 @@ public class Cadrillage {
     }
 
     // Méthode pour placer un personnage dans le tableau
-    public void placerPersonnage(int ligne, int colonne, String personnage) {
-        this.tableau[ligne][colonne] = "\033[47m" + personnage + "\033[0m";
+    public void placerPersonnage(int ligne, int colonne, Personage joueur) {
+        this.tableau[ligne][colonne] = "\033[47m" + joueur.recupPersonnage() + "\033[0m";
+        joueur.defLigne((byte)ligne);
+        joueur.defColonne((byte)colonne);
     }
+
+    public void deplacerPersonnage(byte ligne, byte colonne, Personage joueur) {
+        byte lignedepar = joueur.recupLigne();
+        byte colonnedepar = joueur.recupColonne();
+        this.tableau[lignedepar][colonnedepar] = "\033[47m  \033[0m";
+        this.tableau[ligne][colonne] = "\033[47m" + joueur.recupPersonnage() + "\033[0m";
+        joueur.defLigne((byte) ligne);
+        joueur.defColonne((byte) colonne);
+    }
+
+    public void deplacerPersonnage(Personage joueur) {
+        int ligne = joueur.recupLigne();
+        int colonne = joueur.recupColonne();
+        boolean peutSeDeplacer=false;
+        if (ligne > 0 && this.tableau[ligne - 1][colonne].equals("\033[47m  \033[0m")) {
+            peutSeDeplacer = true; // Le joueur peut se déplacer vers le haut
+        }
+
+// Vérifier si le joueur peut se déplacer vers le bas (ligne + 1)
+        if (ligne < this.tableau.length - 1 && this.tableau[ligne + 1][colonne].equals("\033[47m  \033[0m")) {
+            peutSeDeplacer = true; // Le joueur peut se déplacer vers le bas
+        }
+
+// Vérifier si le joueur peut se déplacer vers la gauche (colonne - 1)
+        if (colonne > 0 && this.tableau[ligne][colonne - 1].equals("\033[47m  \033[0m")) {
+            peutSeDeplacer = true; // Le joueur peut se déplacer vers la gauche
+        }
+
+// Vérifier si le joueur peut se déplacer vers la droite (colonne + 1)
+        if (colonne < this.tableau[0].length - 1 && this.tableau[ligne][colonne + 1].equals("\033[47m  \033[0m")) {
+            peutSeDeplacer = true; // Le joueur peut se déplacer vers la droite
+        }
+
+        if (!peutSeDeplacer){
+            joueur.mort();
+        } else {
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("au toure de " + joueur.recupPseudo() + "de se deplacer");
+            while (true) {
+                while (true) {
+                    System.out.println("choisiser la igne entre 1 est 10");
+                    try {
+                        ligne = scanner.nextInt();
+                        if (ligne > 0 && ligne <= 10) {
+                            break;
+                        } else {
+                            System.out.println("Choisissez un chifre entre 1 et 10.");
+                        }
+                    } catch (InputMismatchException e) {
+                        // Gérer l'erreur si l'utilisateur entre une lettre ou un caractère spécial
+                        System.out.println("Entrée invalide. Veuillez entrer un nombre entier.");
+                        scanner.nextLine(); // Consommer la ligne erronée pour éviter une boucle infinie
+                    }
+                }
+                while (true) {
+                    System.out.println("choisiser la colonne entre 1 est 11");
+                    try {
+                        colonne = scanner.nextInt();
+                        if (colonne > 0 && colonne <= 11) {
+                            break;
+                        } else {
+                            System.out.println("Choisissez un chifre entre 1 et 10.");
+                        }
+                    } catch (InputMismatchException e) {
+                        // Gérer l'erreur si l'utilisateur entre une lettre ou un caractère spécial
+                        System.out.println("Entrée invalide. Veuillez entrer un nombre entier.");
+                        scanner.nextLine(); // Consommer la ligne erronée pour éviter une boucle infinie
+                    }
+                }
+                if (((joueur.recupLigne() - 1) == ligne-1) ^ ((joueur.recupLigne() + 1) == ligne-1) ^ ((joueur.recupColonne() - 1) == colonne-1) ^ ((joueur.recupColonne() + 1) == colonne-1)) {
+                    if (this.tableau[(ligne-1)][(colonne-1)].equals("\033[47m  \033[0m")) {
+                        break;
+                    } else {
+                        System.out.println("Choisissez une casse non occuper.");
+                    }
+                } else {
+                    System.out.println("Choisissez une casse acoter de vous.");
+                }
+            }
+            this.deplacerPersonnage((byte) (ligne-1), (byte) (colonne-1), joueur);
+        }
+    }
+
+    public void detruireterin() {
+        Scanner scanner = new Scanner(System.in);
+        int ligne;
+        int colonne;
+        System.out.println("detruiser une casse");
+        while (true) {
+            while (true) {
+                System.out.println("choisiser la ligne entre 1 est 10");
+                try {
+                    ligne = scanner.nextInt();
+                    if (ligne > 0 && ligne <= 10) {
+                        break;
+                    } else {
+                        System.out.println("Choisissez un chifre entre 1 et 10.");
+                    }
+                } catch (InputMismatchException e) {
+                    // Gérer l'erreur si l'utilisateur entre une lettre ou un caractère spécial
+                    System.out.println("Entrée invalide. Veuillez entrer un nombre entier.");
+                    scanner.nextLine(); // Consommer la ligne erronée pour éviter une boucle infinie
+                }
+            }
+            while (true) {
+                System.out.println("choisiser la colonne entre 1 est 11");
+                try {
+                    colonne = scanner.nextInt();
+                    if (colonne > 0 && colonne <= 11) {
+                        break;
+                    } else {
+                        System.out.println("Choisissez un chifre entre 1 et 10.");
+                    }
+                } catch (InputMismatchException e) {
+                    // Gérer l'erreur si l'utilisateur entre une lettre ou un caractère spécial
+                    System.out.println("Entrée invalide. Veuillez entrer un nombre entier.");
+                    scanner.nextLine(); // Consommer la ligne erronée pour éviter une boucle infinie
+                }
+            }
+            System.out.println("debug ligne= "+ ligne + " colonne= " + colonne);
+            if (this.tableau[(ligne-1)][(colonne-1)].equals("\033[47m  \033[0m")) {
+                break;
+            } else {
+                System.out.println("Choisissez une casse non occuper.");
+            }
+        }
+        this.destruction((byte) ligne-1, (byte) colonne-1);
+    }
+
 }
