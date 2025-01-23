@@ -1,6 +1,8 @@
 import java.io.*;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class Scores {
     public static void main (String[] args) {
@@ -16,6 +18,12 @@ public class Scores {
         Personage gagnant = Personage.GestionGagnant.trouverGagnant(joueurs);
 
         Personage.GestionGagnant.ajoutGagnant(cheminFichier, gagnant);
+
+        lireScores(cheminFichier);
+
+        afficherScoresTrie(cheminFichier, true);
+
+        afficherTop10Scores(cheminFichier);
     }
 
     public static void verifierFichier (String cheminFichier) {
@@ -64,6 +72,65 @@ public class Scores {
             } catch (IOException e) {
                 System.err.println("Erreur lors de la lecture du fichier : " + e.getMessage());
             }
+    }
+
+
+    // Affiche les scores triés dans l'ordre croissant ou décroissant
+    public static void afficherScoresTrie(String cheminFichier, boolean croissant) {
+        // Lire les scores depuis le fichier
+        List<Map.Entry<String, Integer>> scores = lireScores(cheminFichier);
+
+        // Trier les scores en fonction de l'ordre demandé
+        scores.sort((a, b) -> croissant ? a.getValue() - b.getValue() : b.getValue() - a.getValue());
+
+        // Affichage des scores triés
+        System.out.println("=== Scores triés " + (croissant ? "croissant" : "décroissant") + " ===");
+        for (Map.Entry<String, Integer> score : scores) {
+            System.out.println(score.getKey() + " : " + score.getValue());
+        }
+    }
+
+    // Affiche les 10 meilleurs scores dans l'ordre décroissant
+    public static void afficherTop10Scores(String cheminFichier) {
+        // Lire les scores depuis le fichier
+        List<Map.Entry<String, Integer>> scores = lireScores(cheminFichier);
+
+        // Trier dans l'ordre décroissant
+        scores.sort((a, b) -> b.getValue() - a.getValue());
+
+        // Afficher les 10 meilleurs scores
+        System.out.println("=== Top 10 des meilleurs scores ===");
+        for (int i = 0; i < Math.min(10, scores.size()); i++) {
+            Map.Entry<String, Integer> score = scores.get(i);
+            System.out.println((i + 1) + ". " + score.getKey() + " : " + score.getValue());
+        }
+    }
+
+
+    // Lit les scores depuis le fichier et les retourne sous forme de liste de paires (pseudo, score)
+    private static List<Map.Entry<String, Integer>> lireScores(String cheminFichier) {
+        List<Map.Entry<String, Integer>> scores = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(cheminFichier))) {
+            String ligne;
+            while ((ligne = reader.readLine()) != null) {
+                String[] parts = ligne.split(":");
+                if (parts.length == 2) {
+                    try {
+                        // Extraire le pseudo et le score
+                        String pseudo = parts[0].trim();
+                        int score = Integer.parseInt(parts[1].trim());
+                        scores.add(new AbstractMap.SimpleEntry<>(pseudo, score));
+                    } catch (NumberFormatException e) {
+                        System.err.println("Score invalide pour la ligne : " + ligne);
+                    }
+                } else {
+                    System.err.println("Format invalide de la ligne : " + ligne);
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Erreur lors de la lecture du fichier : " + e.getMessage());
+        }
+        return scores;
     }
 }
 
