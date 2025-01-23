@@ -65,12 +65,32 @@ public class Cadrillage {
     }
 
     public void deplacerPersonnage(Personage joueur) {
-        if ((!this.tableau[joueur.recupLigne()-1][joueur.recupColonne()].equals("\033[47m  \033[0m")) && (!this.tableau[joueur.recupLigne()+1][joueur.recupColonne()].equals("\033[47m  \033[0m")) && (!this.tableau[joueur.recupLigne()][joueur.recupColonne()-1].equals("\033[47m  \033[0m")) && (!this.tableau[joueur.recupLigne()][joueur.recupColonne()+1].equals("\033[47m  \033[0m"))){
+        int ligne = joueur.recupLigne();
+        int colonne = joueur.recupColonne();
+        boolean peutSeDeplacer=false;
+        if (ligne > 0 && this.tableau[ligne - 1][colonne].equals("\033[47m  \033[0m")) {
+            peutSeDeplacer = true; // Le joueur peut se déplacer vers le haut
+        }
+
+// Vérifier si le joueur peut se déplacer vers le bas (ligne + 1)
+        if (ligne < this.tableau.length - 1 && this.tableau[ligne + 1][colonne].equals("\033[47m  \033[0m")) {
+            peutSeDeplacer = true; // Le joueur peut se déplacer vers le bas
+        }
+
+// Vérifier si le joueur peut se déplacer vers la gauche (colonne - 1)
+        if (colonne > 0 && this.tableau[ligne][colonne - 1].equals("\033[47m  \033[0m")) {
+            peutSeDeplacer = true; // Le joueur peut se déplacer vers la gauche
+        }
+
+// Vérifier si le joueur peut se déplacer vers la droite (colonne + 1)
+        if (colonne < this.tableau[0].length - 1 && this.tableau[ligne][colonne + 1].equals("\033[47m  \033[0m")) {
+            peutSeDeplacer = true; // Le joueur peut se déplacer vers la droite
+        }
+
+        if (!peutSeDeplacer){
             joueur.mort();
         } else {
             Scanner scanner = new Scanner(System.in);
-            int ligne;
-            int colonne;
             System.out.println("au toure de " + joueur.recupPseudo() + "de se deplacer");
             while (true) {
                 while (true) {

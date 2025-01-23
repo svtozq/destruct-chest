@@ -1,5 +1,6 @@
 import java.util.ArrayList;
-
+import java.util.Scanner;
+import java.util.InputMismatchException;
 public class jeux {
 
     private boolean win;
@@ -21,6 +22,26 @@ public class jeux {
 
         // Choisir les personnages pour 2 joueurs
         int nombreDeJoueurs = 2;
+        Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            System.out.print("conbien de jouer");
+            try {
+                nombreDeJoueurs = scanner.nextInt();
+
+                if (nombreDeJoueurs > 0 && nombreDeJoueurs < 5) {
+                    break;
+                } else {
+                    System.out.println("Choisissez un nombre persone entre 1 et 4.");
+                }
+            }catch (InputMismatchException e) {
+                // Gérer l'erreur si l'utilisateur entre une lettre ou un caractère spécial
+                System.out.println("Entrée invalide. Veuillez entrer un nombre entier entre 1 et 4.");
+                scanner.nextLine(); // Consommer la ligne erronée pour éviter une boucle infinie
+
+            }
+        }
+
         for (int i = 0; i < nombreDeJoueurs; i++) {
             Personage joueur = Personage.choisirPersonage(i+1, pseudosUtilises, personnagesUtilises);
             joueurs.add(joueur);
@@ -30,13 +51,6 @@ public class jeux {
             personnagesUtilises.add(joueur.recupPersonnage());
 
         }
-        // Affiche le tableau après la destruction
-        cadrillage.destruction(1, 1);
-        cadrillage.destruction(2, 2);
-        cadrillage.destruction(3, 3);
-        cadrillage.destruction(2, 4);
-        cadrillage.destruction(1, 5);
-        cadrillage.afficher();
 
         // Place les personnages dans le tableau
         for (int i = 0; i < joueurs.size(); i++) {
@@ -46,11 +60,6 @@ public class jeux {
 
         // Affiche le tableau avec les personnages
         cadrillage.afficher();
-        cadrillage.deplacerPersonnage((byte)3,(byte)3,joueurs.get(0));
-        cadrillage.deplacerPersonnage((byte)2,(byte)2,joueurs.get(0));
-        cadrillage.deplacerPersonnage((byte)2,(byte)4,joueurs.get(0));
-        cadrillage.afficher();
-
         this.partie(cadrillage, joueurs, nombreDeJoueurs);
     }
 
@@ -90,5 +99,8 @@ public class jeux {
                 break;
             }
         }
+
+
+
     }
 }
