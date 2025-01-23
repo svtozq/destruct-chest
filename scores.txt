@@ -1,1 +1,1 @@
-Joueur 1 : 0
+strauss : 1

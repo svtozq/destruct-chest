@@ -7,39 +7,15 @@ public class Scores {
         // chemin du fichier
         String cheminFichier = "scores.txt";
 
-        String lignes;
-        String ligneAModifier = "Joueur 2";
-        String nouvelleLigne = "Joueur 2: 7";
-
-        try {
-            List<String> list = new ArrayList<>();
-            try (BufferedReader reader = new BufferedReader(new FileReader(cheminFichier))) {
-
-                // lecture du fichier ligne par ligne
-                while ((lignes = reader.readLine()) != null) {
-                    // remplace la ligne contenant le pseudo par le nouveau nombre de victoires
-                    if (lignes.contains(ligneAModifier)) {
-                        list.add(nouvelleLigne);
-                    } else {
-                        list.add(lignes);
-                    }
-                }
-
-                try (BufferedWriter writer = new BufferedWriter(new FileWriter(cheminFichier))) {
-                    for (String ligne : list) {
-                        writer.write(ligne);
-                        writer.newLine();
-                    }
-                }
-                System.out.println("Modification effectué avec succès !");
-                // en cas d'erreur
-            } } catch (IOException e) {
-            System.err.println("Erreur lors de la modification : " + e.getMessage());
-        }
-
         verifierFichier(cheminFichier);
 
         afficherScores(cheminFichier);
+
+        ArrayList<Personage> joueurs = new ArrayList<>();
+
+        Personage gagnant = Personage.GestionGagnant.trouverGagnant(joueurs);
+
+        Personage.GestionGagnant.ajoutGagnant(cheminFichier, gagnant);
     }
 
     public static void verifierFichier (String cheminFichier) {
@@ -51,11 +27,6 @@ public class Scores {
             try {
                 if (file.createNewFile()) {
                     System.out.println("Création du fichier : " + cheminFichier);
-
-                    try (FileWriter writer = new FileWriter(file)) {
-                        writer.write("Joueur 1 : 0");
-                    }
-
                 }
             } catch (IOException e) {
                 System.err.println("Erreur lors de la création du fichier : " + e.getMessage());
@@ -74,7 +45,7 @@ public class Scores {
         // utilisation d'une classe pour le contenu d'un fichier
             try (BufferedReader reader = new BufferedReader(new FileReader(cheminFichier))) {
                 String ligne;
-                System.out.println("Tableau des Scores");
+                System.out.println("=== Tableau des Scores ===");
 
                 // lecture du fichier ligne par ligne
                 while ((ligne = reader.readLine()) != null) {
@@ -94,8 +65,6 @@ public class Scores {
                 System.err.println("Erreur lors de la lecture du fichier : " + e.getMessage());
             }
     }
-
-
-        }
+}
 
 

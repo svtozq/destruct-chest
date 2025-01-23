@@ -9,8 +9,9 @@ public class menu {
             // Afficher les options du menu
             System.out.println("=== Menu Principal ===");
             System.out.println("1. JOUER");
-            System.out.println("2. CHARGER LES SAUVEGARDES");
-            System.out.println("3. REGLES");
+            System.out.println("2. VOIR LE TABLEAU DES SCORES");
+            System.out.println("3. CHARGER LES SAUVEGARDES");
+            System.out.println("4. REGLES");
             System.out.println("0. QUITTER");
             System.out.print("Veuillez choisir une option : ");
 
@@ -27,12 +28,17 @@ public class menu {
                     jeux jeux = new jeux();
                     jeux.demarelejeux();
                 case 2:
-                    System.out.println("Vous avez choisi l'option 2.");
+                    System.out.println(" ");
+                    Scores.afficherScores("scores.txt");
+                    System.out.println(" ");
                     break;
                 case 3:
+                    System.out.println("Vous avez choisi l'option 3.");
+                    break;
+                case 4:
                     System.out.println("regle du jeu.");
                     System.out.println(".");
-                    System.out.println("0. quiter.");
+                    System.out.println("0. quiTter.");
                     scanner.next();
                     break;
                 case 0:

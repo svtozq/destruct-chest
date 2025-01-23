@@ -96,11 +96,9 @@ public class jeux {
             Personage joueur = joueurs.get(i);
             if(joueur.recupEnvie()){
                 System.out.println(joueur.recupPseudo()+" a ganier la partie");
+                Personage.GestionGagnant.ajoutGagnant("scores.txt", Personage.GestionGagnant.trouverGagnant(joueurs));
                 break;
             }
         }
-
-
-
     }
 }

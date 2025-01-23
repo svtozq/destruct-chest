@@ -1,5 +1,7 @@
+import java.io.*;
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.InputMismatchException;
 public class Personage {
 
@@ -21,7 +23,6 @@ public class Personage {
     // recupere et definir pour pseudo
 
     /**
-     *
      * @return
      */
     public String recupPseudo() {
@@ -62,6 +63,7 @@ public class Personage {
     public boolean recupEnvie() {
         return envie;
     }
+
     public void mort() {
         this.envie = false;
     }
@@ -69,7 +71,6 @@ public class Personage {
     // Méthode pour choisir un pseudo et un personnage
 
     /**
-     *
      * @param numeroJoueur
      * @param pseudosUtilises
      * @param personnagesUtilises
@@ -117,12 +118,74 @@ public class Personage {
                 } else {
                     System.out.println("Choisissez un personnage entre 1 et 5.");
                 }
-            }catch (InputMismatchException e) {
-                    // Gérer l'erreur si l'utilisateur entre une lettre ou un caractère spécial
-                    System.out.println("Entrée invalide. Veuillez entrer un nombre entier entre 1 et 5.");
-                    scanner.nextLine(); // Consommer la ligne erronée pour éviter une boucle infinie
+            } catch (InputMismatchException e) {
+                // Gérer l'erreur si l'utilisateur entre une lettre ou un caractère spécial
+                System.out.println("Entrée invalide. Veuillez entrer un nombre entier entre 1 et 5.");
+                scanner.nextLine(); // Consommer la ligne erronée pour éviter une boucle infinie
 
             }
         }
     }
+
+    public class GestionGagnant {
+        public static Personage trouverGagnant(ArrayList<Personage> joueurs) {
+            for (Personage joueur : joueurs) {
+                if (joueur.recupEnvie()) {
+                    return joueur; // Retourne le joueur encore en vie
+                }
+            }
+            return null; // Aucun gagnant trouvé
+        }
+
+        public static void ajoutGagnant (String cheminFichier, Personage gagnant) {
+
+            if (gagnant != null) {
+                String gagnantPseudo = gagnant.recupPseudo();
+                boolean ligneModifiee = false;
+                List<String> joueurs = new ArrayList<>();
+
+                try {
+
+                    try (BufferedReader reader = new BufferedReader(new FileReader(cheminFichier))) {
+                        String lignes;
+                        // lecture du fichier ligne par ligne
+                        while ((lignes = reader.readLine()) != null) {
+                            // remplace la ligne contenant le pseudo du gagnant
+                            if (lignes.contains(gagnantPseudo)) {
+                                String[] parts = lignes.split(":");
+                                int score = Integer.parseInt(parts[1].trim());
+                                score++; // incrémentation du score
+                                joueurs.add(gagnantPseudo + " : " + score);
+                                ligneModifiee = true;
+                            } else {
+                                joueurs.add(lignes);
+                            }
+                        }
+                        // en cas d'erreur
+                    } } catch (IOException e) {
+                    System.err.println("Erreur lors de la lecture du fichier");
+                }
+
+                // Si la ligne n'a pas été trouvée, ajouter le gagnant avec un score initial de 1
+                if (!ligneModifiee) {
+                    joueurs.add(gagnantPseudo + " : 1");
+                }
+
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter(cheminFichier))) {
+                    for (String lignes : joueurs) {
+                        writer.write(lignes);
+                        writer.newLine();
+                    }
+                    System.out.println("Ajout du Gagnant dans le tableau avec succès !");
+                } catch (IOException e) {
+                    System.err.println("Erreur lors de l'écriture dans le fichier : " + e.getMessage());
+                }
+            } else {
+                System.out.println("Aucun gagnant à écrire dans le fichier.");
+            }
+        }
+    }
 }
+
+
+
