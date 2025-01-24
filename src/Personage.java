@@ -128,6 +128,7 @@ public class Personage {
     }
 
     public class GestionGagnant {
+        // fonction qui récupère le joueur gagnant
         public static Personage trouverGagnant(ArrayList<Personage> joueurs) {
             for (Personage joueur : joueurs) {
                 if (joueur.recupEnvie()) {
@@ -137,23 +138,23 @@ public class Personage {
             return null; // Aucun gagnant trouvé
         }
 
+        // fonction d'ajout du joueur dans le fichier texte
         public static void ajoutGagnant (String cheminFichier, Personage gagnant) {
-
+            // condition si il y a un gagnant
             if (gagnant != null) {
                 String gagnantPseudo = gagnant.recupPseudo();
                 boolean ligneModifiee = false;
                 List<String> joueurs = new ArrayList<>();
 
                 try {
-
                     try (BufferedReader reader = new BufferedReader(new FileReader(cheminFichier))) {
                         String lignes;
                         // lecture du fichier ligne par ligne
                         while ((lignes = reader.readLine()) != null) {
                             // remplace la ligne contenant le pseudo du gagnant
                             if (lignes.contains(gagnantPseudo)) {
-                                String[] parts = lignes.split(":");
-                                int score = Integer.parseInt(parts[1].trim());
+                                String[] parts = lignes.split(":"); // sépare la ligne aux ':'
+                                int score = Integer.parseInt(parts[1].trim()); //
                                 score++; // incrémentation du score
                                 joueurs.add(gagnantPseudo + " : " + score);
                                 ligneModifiee = true;
